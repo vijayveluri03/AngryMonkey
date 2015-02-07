@@ -1,0 +1,16 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace />
+  <MonoDevelop.Ide.Workbench ActiveDocument="GoneBananasApplicationDelegate.cs">
+    <Files>
+      <File FileName="CCPhysicsSprite.cs" Line="1" Column="1" />
+      <File FileName="GameLayer.cs" Line="1" Column="1" />
+      <File FileName="GameOverLayer.cs" Line="1" Column="1" />
+      <File FileName="GameStartLayer.cs" Line="1" Column="1" />
+      <File FileName="GoneBananasApplicationDelegate.cs" Line="10" Column="10" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

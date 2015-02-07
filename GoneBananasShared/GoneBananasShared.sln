@@ -1,0 +1,11 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "GoneBananasShared", "GoneBananasShared.shproj", "{7187ABEC-F6E0-4CF4-8E8C-481DBE6DA18B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+	EndGlobalSection
+EndGlobal
