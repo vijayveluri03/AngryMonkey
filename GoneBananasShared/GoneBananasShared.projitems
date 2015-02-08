@@ -15,5 +15,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)GoneBananasApplicationDelegate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CCPhysicsSprite.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CCEnemySprite.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Accelerometer.cs" />
   </ItemGroup>
 </Project>
