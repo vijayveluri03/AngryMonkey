@@ -328,7 +328,7 @@ namespace GoneBananas
 							if (hit) 
 							{
 								hitBananas.Add (banana);
-								CCSimpleAudioEngine.SharedEngine.PlayEffect ("Sounds/EnemyShoot");
+								CCSimpleAudioEngine.SharedEngine.PlayEffect ("Sounds/EnemyShoot.wav");
 								Explode (banana.Position);
 								banana.RemoveFromParent ();
 								enemy.RemoveFromParent ();
@@ -360,7 +360,7 @@ namespace GoneBananas
 						hit = ball.BoundingBoxTransformedToParent.IntersectsRect (enemy.BoundingBoxTransformedToParent);
 						if (hit) 
 						{
-							CCSimpleAudioEngine.SharedEngine.PlayEffect ("Sounds/LostLife");
+							CCSimpleAudioEngine.SharedEngine.PlayEffect ("Sounds/LostLife.wav");
 							Explode (ball.Position);
 							ball.RemoveFromParent ();
 
@@ -443,7 +443,7 @@ namespace GoneBananas
             // move the clouds relative to the monkey's movement
             //MoveClouds (location.Y - monkey.Position.Y);
 
-
+			CCSimpleAudioEngine.SharedEngine.PlayEffect ("Sounds/tap.wav");
 			visibleBananas.Add (ShootBanana ());
         }
 

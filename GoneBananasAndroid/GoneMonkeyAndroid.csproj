@@ -16,7 +16,7 @@
     <AndroidApplication>True</AndroidApplication>
     <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
     <AssemblyName>GoneBananasAndroid</AssemblyName>
-    <TargetFrameworkVersion>v4.4</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -89,7 +89,6 @@
   <ItemGroup>
     <AndroidAsset Include="Assets\Content\hd\animations\monkey.plist" />
     <AndroidAsset Include="Assets\Content\hd\animations\monkey.png" />
-    <AndroidAsset Include="Assets\Content\Sounds\tap.mp3" />
     <AndroidAsset Include="Assets\Content\fonts\arial-22.xnb" />
     <AndroidAsset Include="Assets\Content\hd\cloud.png" />
     <AndroidAsset Include="Assets\Content\hd\grass.png" />
@@ -98,7 +97,8 @@
     <AndroidAsset Include="Assets\Content\hd\Life.png" />
     <AndroidAsset Include="Assets\Content\hd\Enemy.png" />
     <AndroidAsset Include="Assets\Content\Sounds\AngryMonkeyBG.mp3" />
-    <AndroidAsset Include="Assets\Content\Sounds\EnemyShoot.mp3" />
-    <AndroidAsset Include="Assets\Content\Sounds\LostLife.mp3" />
+    <AndroidAsset Include="Assets\Content\Sounds\EnemyShoot.wav" />
+    <AndroidAsset Include="Assets\Content\Sounds\LostLife.wav" />
+    <AndroidAsset Include="Assets\Content\Sounds\tap.wav" />
   </ItemGroup>
 </Project>
