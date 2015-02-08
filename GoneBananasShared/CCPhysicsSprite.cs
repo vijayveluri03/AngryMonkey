@@ -12,6 +12,7 @@ namespace GoneBananas
         public CCPhysicsSprite (CCTexture2D f, CCRect r, float ptmRatio) : base (f, r)
         {
             this.ptmRatio = ptmRatio;
+			ZOrder = 1;
         }
 
         public b2Body PhysicsBody { get; set; }

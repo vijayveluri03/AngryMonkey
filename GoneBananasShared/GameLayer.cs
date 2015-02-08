@@ -12,9 +12,13 @@ namespace GoneBananas
 {
     public class GameLayer : CCLayerColor
     {
+		public delegate void ShootBulletDelg ( CCSprite fromSprite );
+
         const float MONKEY_SPEED = 350.0f;
-        const float GAME_DURATION = 60.0f; // game ends after 60 seconds or when the monkey hits a ball, whichever comes first
+        const float GAME_DURATION = 600.0f; // game ends after 60 seconds or when the monkey hits a ball, whichever comes first
         const int MAX_NUM_BALLS = 10;
+		const int MAX_ENEMY_COUNT = 1;
+		const int MAX_BANANAS_COUNT = 3;
 
         // point to meter ratio for physics
         const int PTM_RATIO = 32;
@@ -52,7 +56,12 @@ namespace GoneBananas
         
         // balls sprite batch
         CCSpriteBatchNode ballsBatch;
+		CCSpriteBatchNode enemyBatch;
+		CCSpriteBatchNode bananaBatch;
+
         CCTexture2D ballTexture;
+		CCTexture2D enemyTexture;
+		CCSpriteFrame bananasTexture;
 
         public GameLayer ()
         {
@@ -70,7 +79,16 @@ namespace GoneBananas
             ballsBatch = new CCSpriteBatchNode ("balls", 100);
             ballTexture = ballsBatch.Texture;
             AddChild (ballsBatch, 1, 1);
-	
+
+			var spriteSheet = new CCSpriteSheet ("animations/monkey.plist");
+			enemyBatch = new CCSpriteBatchNode ( "balls", 10);
+			enemyTexture = enemyBatch.Texture;
+			AddChild (enemyBatch , 2, 2);
+
+			bananaBatch = new CCSpriteBatchNode ("animations/monkey", 10);
+			bananasTexture = spriteSheet.Frames.Find ((x) => x.TextureFilename.StartsWith ("Banana"));
+			AddChild (bananaBatch, 1, 3);
+
             AddGrass ();
             AddSun ();
             AddMonkey ();
@@ -83,12 +101,13 @@ namespace GoneBananas
         void StartScheduling()
         {
             Schedule (t => {
-                visibleBananas.Add (AddBanana ());
+                //visibleBananas.Add (AddBanana ());
                 elapsedTime += t;
                 if (ShouldEndGame ()) {
                     EndGame ();
                 }
-                AddBall ();
+				AddEnemy ();
+                //ShootBullet ();
             }, 1.0f);
 
             Schedule (t => CheckCollision ());
@@ -139,22 +158,25 @@ namespace GoneBananas
             AddChild (monkey);
         }
 
-        CCSprite AddBanana ()
+        CCSprite ShootBanana ()
         {
-            var spriteSheet = new CCSpriteSheet ("animations/monkey.plist");
-            var banana = new CCSprite (spriteSheet.Frames.Find ((x) => x.TextureFilename.StartsWith ("Banana")));
+			if (bananaBatch.ChildrenCount < MAX_BANANAS_COUNT) 
+			{
+				var banana = new CCSprite ( bananasTexture );
 
-            var p = GetRandomPosition (banana.ContentSize);
-            banana.Position = p;
-            banana.Scale = 0.5f;
+				//var p = GetRandomPosition (banana.ContentSize);
+				banana.Position = new CCPoint (monkey.Position.X, monkey.Position.Y + (banana.ContentSize.Height / 2));
+				banana.Scale = 0.5f;
+				bananaBatch.AddChild (banana, 1);
 
-            AddChild (banana);
+				var moveBanana = new CCMoveTo (5.0f, new CCPoint (banana.Position.X,
+					                 VisibleBoundsWorldspace.Size.Height + banana.ContentSize.Height / 2));
+				banana.RunActions (moveBanana, moveBananaComplete);
+				banana.RepeatForever (rotateBanana);
 
-            var moveBanana = new CCMoveTo (5.0f, new CCPoint (banana.Position.X, 0));
-            banana.RunActions (moveBanana, moveBananaComplete);
-            banana.RepeatForever (rotateBanana);
-
-            return banana;
+				return banana;
+			}
+			return null;
         }
 
         CCPoint GetRandomPosition (CCSize spriteSize)
@@ -164,8 +186,21 @@ namespace GoneBananas
                 ? rnd * VisibleBoundsWorldspace.Size.Width - spriteSize.Width / 2 
                 : spriteSize.Width / 2;
 
-            return new CCPoint ((float)randomX, VisibleBoundsWorldspace.Size.Height - spriteSize.Height / 2);
+			return new CCPoint ((float)randomX, VisibleBoundsWorldspace.Size.Height - spriteSize.Height / 2);
         }
+		/*CCPoint GetRandomPosition (CCSize spriteSize)
+		{
+			double rnd = CCRandom.NextDouble ();
+			double randomX = (rnd > 0) 
+				? rnd * VisibleBoundsWorldspace.Size.Width - spriteSize.Width / 2 
+				: spriteSize.Width / 2;
+
+			Random rand = new Random ();
+			int randomY = rand.Next ((int)(VisibleBoundsWorldspace.Size.Height / 2), 
+				(int)(VisibleBoundsWorldspace.Size.Height-spriteSize.Height / 2));
+
+			return new CCPoint ((float)randomX, randomY);
+		}*/
 
         void AddClouds ()
         {
@@ -199,17 +234,31 @@ namespace GoneBananas
 
         void CheckCollision ()
         {
-
-            foreach (var banana in visibleBananas)
-            {
-                bool hit = banana.BoundingBoxTransformedToParent.IntersectsRect(monkey.BoundingBoxTransformedToParent);
-                if (hit)
-                {
-                    hitBananas.Add(banana);
-                    CCSimpleAudioEngine.SharedEngine.PlayEffect("Sounds/tap");
-                    Explode(banana.Position);
-                    banana.RemoveFromParent();
-                }
+			bool hit = false;
+			for ( int iBananaCount = 0; iBananaCount < bananaBatch.ChildrenCount; iBananaCount++ )
+			{
+				if (bananaBatch.Children [iBananaCount] is CCSprite) 
+				{
+					CCSprite banana = (CCSprite)bananaBatch.Children [iBananaCount];
+					for ( int iEnemyCount = 0; iEnemyCount < enemyBatch.ChildrenCount; iEnemyCount++ )
+					{
+						if (enemyBatch.Children [iEnemyCount] is CCSprite) {
+							CCSprite enemy = (CCSprite)enemyBatch.Children [iEnemyCount];
+							hit = banana.BoundingBoxTransformedToParent.IntersectsRect (enemy.BoundingBoxTransformedToParent);
+							if (hit) 
+							{
+								hitBananas.Add (banana);
+								CCSimpleAudioEngine.SharedEngine.PlayEffect ("Sounds/tap");
+								Explode (banana.Position);
+								banana.RemoveFromParent ();
+								enemy.RemoveFromParent ();
+								break;
+							}
+						}
+						if (hit)
+							break;
+					}
+				}
             }
 
             foreach (var banana in hitBananas)
@@ -266,6 +315,9 @@ namespace GoneBananas
 
             // move the clouds relative to the monkey's movement
             MoveClouds (location.Y - monkey.Position.Y);
+
+
+			visibleBananas.Add (ShootBanana ());
         }
 
         protected override void AddedToScene ()
@@ -309,7 +361,7 @@ namespace GoneBananas
             groundBody.CreateFixture (fd);
         }
 
-        void AddBall ()
+		void ShootBullet ( CCSprite enemySprite )
         {
             if (ballsBatch.ChildrenCount < MAX_NUM_BALLS) {
                 int idx = (CCRandom.Float_0_1 () > .5 ? 0 : 1);
@@ -318,13 +370,18 @@ namespace GoneBananas
 
                 ballsBatch.AddChild (sprite);
 
-                CCPoint p = GetRandomPosition (sprite.ContentSize);
+                //CCPoint p = GetRandomPosition (sprite.ContentSize);
 
-                sprite.Position = new CCPoint (p.X, p.Y);
+				sprite.Position = enemySprite.Position;// new CCPoint (p.X, p.Y);
 
                 var def = new b2BodyDef ();
-                def.position = new b2Vec2 (p.X / PTM_RATIO, p.Y / PTM_RATIO);
-                def.linearVelocity = new b2Vec2 (0.0f, -1.0f);
+				def.position = new b2Vec2 (sprite.Position.X / PTM_RATIO, sprite.Position.Y / PTM_RATIO);
+				Random rand = new Random ();
+				/*if(rand.Next (100) < 50)
+                	def.linearVelocity = new b2Vec2 (-10.0f, 0.0f);
+				else
+					def.linearVelocity = new b2Vec2 (10.0f, 0.0f);*/
+				def.linearVelocity = new b2Vec2 (0.0f, -1.0f);
                 def.type = b2BodyType.b2_dynamicBody;
                 b2Body body = world.CreateBody (def);
 
@@ -341,6 +398,26 @@ namespace GoneBananas
                 sprite.PhysicsBody = body;
             }
         }
+		void AddEnemy ()
+		{
+			if ( enemyBatch.ChildrenCount < MAX_ENEMY_COUNT) {
+				float idx = (CCRandom.Float_0_1 () > .5 ? 0 : 1);
+				float idxOp = 1 - idx;
+				float idy = (float) (0.7 + (CCRandom.Float_0_1 () *  0.2));
+				var enemySprite = new CCEnemySprite (enemyBatch.Texture, new CCRect (0,0, enemyBatch.Texture.PixelsWide, enemyBatch.Texture.PixelsHigh ), 5.0f, ShootBullet );
+				enemyBatch.AddChild (enemySprite);
+
+				enemySprite.Position = new CCPoint ( idx * VisibleBoundsWorldspace.Size.Width, idy * VisibleBoundsWorldspace.Size.Height );
+				//enemySprite.ZOrder  =
+
+				// sending the enemy to the opposite direction
+				var moveEnemy = new CCMoveTo (5.0f, new CCPoint (idxOp * VisibleBoundsWorldspace.Size.Width,
+												enemySprite.Position.Y));
+				enemySprite.RunActions (moveEnemy, moveBananaComplete);
+				//enemySprite.RepeatForever (rotateBanana);
+
+			}
+		}
 
         public override void OnEnter ()
         {

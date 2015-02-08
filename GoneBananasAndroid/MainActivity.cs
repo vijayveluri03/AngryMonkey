@@ -18,7 +18,7 @@ namespace GoneBananasAndroid
         AlwaysRetainTaskState = true,
         Icon = "@drawable/ic_launcher",
         Theme = "@android:style/Theme.NoTitleBar",
-        ScreenOrientation = ScreenOrientation.Portrait,
+		ScreenOrientation = ScreenOrientation.Landscape,
         LaunchMode = LaunchMode.SingleInstance,
         MainLauncher = true,
         ConfigurationChanges =  ConfigChanges.Keyboard | ConfigChanges.KeyboardHidden)
