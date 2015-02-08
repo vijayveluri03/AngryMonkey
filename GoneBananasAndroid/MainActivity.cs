@@ -10,6 +10,7 @@ using Android.Widget;
 using CocosSharp;
 using Microsoft.Xna.Framework;
 using GoneBananas;
+using Android.Hardware;
 
 namespace GoneBananasAndroid
 {
@@ -25,6 +26,8 @@ namespace GoneBananasAndroid
     ]
     public class MainActivity : AndroidGameActivity
     {
+		SensorManager mSensorManager = null;
+		Accelerometer_Droid mAccelerometer = null;
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
@@ -33,6 +36,23 @@ namespace GoneBananasAndroid
             application.ApplicationDelegate = new GoneBananasApplicationDelegate();
             SetContentView(application.AndroidContentView);
             application.StartGame();
+
+			if (mSensorManager == null)
+				mSensorManager = (SensorManager)GetSystemService (Activity.SensorService);
+
+			if (mAccelerometer == null)
+				mAccelerometer = new Accelerometer_Droid (mSensorManager);
         }
+
+		protected override void OnPause ()
+		{
+			base.OnPause ();
+			mAccelerometer.OnGamePause ();
+		}
+		protected override void OnResume ()
+		{
+			base.OnResume ();
+			mAccelerometer.OnGameResume ();
+		}
     }
 }
