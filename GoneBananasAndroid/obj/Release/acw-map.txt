@@ -1,8 +1,0 @@
-GoneBananasAndroid.MainActivity;gonebananasandroid.MainActivity
-GoneBananasAndroid.Accelerometer_Droid;gonebananasandroid.Accelerometer_Droid
-Microsoft.Xna.Framework.AndroidGameActivity;microsoft.xna.framework.AndroidGameActivity
-Microsoft.Xna.Framework.MonoGameAndroidGameView;microsoft.xna.framework.MonoGameAndroidGameView
-Microsoft.Devices.Sensors.Accelerometer.SensorListener;microsoft.devices.sensors.Accelerometer_SensorListener
-Microsoft.Devices.Sensors.Compass.SensorListener;microsoft.devices.sensors.Compass_SensorListener
-Microsoft.Xna.Framework.OrientationListener;microsoft.xna.framework.OrientationListener
-Microsoft.Xna.Framework.ScreenReceiver;microsoft.xna.framework.ScreenReceiver
