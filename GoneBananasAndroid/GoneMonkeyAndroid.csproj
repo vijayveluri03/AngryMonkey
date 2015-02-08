@@ -16,7 +16,7 @@
     <AndroidApplication>True</AndroidApplication>
     <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
     <AssemblyName>GoneBananasAndroid</AssemblyName>
-    <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.4</TargetFrameworkVersion>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -100,5 +100,6 @@
     <AndroidAsset Include="Assets\Content\Sounds\EnemyShoot.wav" />
     <AndroidAsset Include="Assets\Content\Sounds\LostLife.wav" />
     <AndroidAsset Include="Assets\Content\Sounds\tap.wav" />
+    <AndroidAsset Include="Assets\Content\fonts\arial-24.xnb" />
   </ItemGroup>
 </Project>
