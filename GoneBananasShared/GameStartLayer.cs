@@ -21,7 +21,7 @@ namespace GoneBananas
         {
             base.AddedToScene ();
 
-            var label = new CCLabelTtf("Your Angry monkey is waiting for you. \nTap the Screen and take revenge", "arial", 22) {
+            var label = new CCLabelTtf("Your Angry monkey is waiting for you. \nTap the Screen and take revenge", "arial", 24) {
                 Position = VisibleBoundsWorldspace.Center,
                 Color = CCColor3B.Green,
                 HorizontalAlignment = CCTextAlignment.Center,

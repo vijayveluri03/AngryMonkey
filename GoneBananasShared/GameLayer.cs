@@ -180,7 +180,7 @@ namespace GoneBananas
 
 			if (mScoreLabel == null) 
 			{
-				mScoreLabel = new CCLabelTtf ("Score : " + mScore , "arial", 22) {
+				mScoreLabel = new CCLabelTtf ("Score : " + mScore , "arial", 24) {
 					Position = VisibleBoundsWorldspace.Center,
 					Color = CCColor3B.Blue,
 					HorizontalAlignment = CCTextAlignment.Center,

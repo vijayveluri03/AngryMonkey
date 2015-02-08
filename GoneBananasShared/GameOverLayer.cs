@@ -43,7 +43,7 @@ namespace GoneBananas
 
             Scene.SceneResolutionPolicy = CCSceneResolutionPolicy.ShowAll;
 
-            var scoreLabel = new CCLabelTtf (scoreMessage, "arial", 22) {
+            var scoreLabel = new CCLabelTtf (scoreMessage, "arial", 24) {
                 Position = new CCPoint (VisibleBoundsWorldspace.Size.Center.X, VisibleBoundsWorldspace.Size.Center.Y + 50),
                 Color = new CCColor3B (CCColor4B.Yellow),
                 HorizontalAlignment = CCTextAlignment.Center,
@@ -53,7 +53,7 @@ namespace GoneBananas
 
             AddChild (scoreLabel);
 
-			var playAgainLabel = new CCLabelTtf ("Tap to Play Again and give your monkey an another chance :)", "arial", 22) {
+			var playAgainLabel = new CCLabelTtf ("Tap to Play Again and give your monkey an another chance :)", "arial", 24) {
                 Position = VisibleBoundsWorldspace.Size.Center,
                 Color = new CCColor3B (CCColor4B.Green),
                 HorizontalAlignment = CCTextAlignment.Center,
