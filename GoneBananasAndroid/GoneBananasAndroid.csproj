@@ -96,5 +96,9 @@
     <AndroidAsset Include="Assets\Content\hd\balls.png" />
     <AndroidAsset Include="Assets\Content\Sounds\backgroundMusic.mp3" />
     <AndroidAsset Include="Assets\Content\hd\Life.png" />
+    <AndroidAsset Include="Assets\Content\hd\Enemy.png" />
+    <AndroidAsset Include="Assets\Content\Sounds\AngryMonkeyBG.mp3" />
+    <AndroidAsset Include="Assets\Content\Sounds\EnemyShoot.mp3" />
+    <AndroidAsset Include="Assets\Content\Sounds\LostLife.mp3" />
   </ItemGroup>
 </Project>

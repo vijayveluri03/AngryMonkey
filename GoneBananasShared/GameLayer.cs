@@ -119,7 +119,7 @@ namespace GoneBananas
 
 			GoneBananasShared.Accelerometer.AddListener (AccelerometerValueChanaged);
 
-            CCSimpleAudioEngine.SharedEngine.PlayBackgroundMusic ("Sounds/backgroundMusic", true);
+            CCSimpleAudioEngine.SharedEngine.PlayBackgroundMusic ("Sounds/AngryMonkeyBG", true);
         }
 		~GameLayer()
 		{
@@ -328,7 +328,7 @@ namespace GoneBananas
 							if (hit) 
 							{
 								hitBananas.Add (banana);
-								CCSimpleAudioEngine.SharedEngine.PlayEffect ("Sounds/tap");
+								CCSimpleAudioEngine.SharedEngine.PlayEffect ("Sounds/EnemyShoot");
 								Explode (banana.Position);
 								banana.RemoveFromParent ();
 								enemy.RemoveFromParent ();
@@ -360,7 +360,7 @@ namespace GoneBananas
 						hit = ball.BoundingBoxTransformedToParent.IntersectsRect (enemy.BoundingBoxTransformedToParent);
 						if (hit) 
 						{
-							CCSimpleAudioEngine.SharedEngine.PlayEffect ("Sounds/tap");
+							CCSimpleAudioEngine.SharedEngine.PlayEffect ("Sounds/LostLife");
 							Explode (ball.Position);
 							ball.RemoveFromParent ();
 
@@ -546,7 +546,7 @@ namespace GoneBananas
 			if ( enemyBatch.ChildrenCount < MAX_ENEMY_COUNT) {
 				float idx = (CCRandom.Float_0_1 () > .5 ? 0 : 1);
 				float idxOp = 1 - idx;
-				float idy = (float) (0.7 + (CCRandom.Float_0_1 () *  0.2));
+				float idy = (float) (0.6 + (CCRandom.Float_0_1 () *  0.2));
 				CCEnemySprite enemySprite = new CCEnemySprite (enemyBatch.Texture, new CCRect (0,0, enemyBatch.Texture.PixelsWide, enemyBatch.Texture.PixelsHigh ), 5.0f, ShootBullet );
 				enemySprite.Scale = 0.3f;
 				enemyBatch.AddChild (enemySprite);
