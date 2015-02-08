@@ -22,6 +22,7 @@ namespace GoneBananas
             Color = new CCColor3B (CCColor4B.Black);
 
             Opacity = 255;
+			MobileService.UpdateScoreToServer (score);
         }
 
         public void AddMonkey ()

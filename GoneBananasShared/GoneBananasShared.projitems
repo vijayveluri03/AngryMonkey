@@ -16,5 +16,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)CCPhysicsSprite.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CCEnemySprite.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Accelerometer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MobileService.cs" />
   </ItemGroup>
 </Project>
