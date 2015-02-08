@@ -17,7 +17,7 @@ namespace GoneBananas
 
             AddEventListener (touchListener, this);
 
-            scoreMessage = String.Format ("Game Over. You collected {0} bananas!", score);
+            scoreMessage = String.Format ("Game Over. Your Score : {0} !", score);
 
             Color = new CCColor3B (CCColor4B.Black);
 
@@ -53,7 +53,7 @@ namespace GoneBananas
 
             AddChild (scoreLabel);
 
-            var playAgainLabel = new CCLabelTtf ("Tap to Play Again", "arial", 22) {
+			var playAgainLabel = new CCLabelTtf ("Tap to Play Again and give your monkey an another chance :)", "arial", 22) {
                 Position = VisibleBoundsWorldspace.Size.Center,
                 Color = new CCColor3B (CCColor4B.Green),
                 HorizontalAlignment = CCTextAlignment.Center,
@@ -66,7 +66,7 @@ namespace GoneBananas
             AddMonkey ();
         }
 
-        public static CCScene SceneWithScore (CCWindow mainWindow, int score)
+		public static CCScene SceneWithScore (CCWindow mainWindow, int score)
         {
             var scene = new CCScene (mainWindow);
             var layer = new GameOverLayer (score);

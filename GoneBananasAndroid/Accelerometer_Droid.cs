@@ -26,7 +26,7 @@ namespace GoneBananasAndroid
 				.Append(", z=")
 				.Append(e.Values[2]);
 
-			Console.WriteLine (text);
+			//Console.WriteLine (text);
 			Accelerometer.pInstance.OnAccelChange (e);
 		}
 

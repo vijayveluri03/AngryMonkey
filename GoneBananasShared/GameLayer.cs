@@ -14,17 +14,20 @@ namespace GoneBananas
     {
 		public delegate void ShootBulletDelg ( CCSprite fromSprite );
 
-        const float MONKEY_SPEED = 350.0f;
+        const float MONKEY_SPEED = 200.0f;
         const float GAME_DURATION = 600.0f; // game ends after 60 seconds or when the monkey hits a ball, whichever comes first
         const int MAX_NUM_BALLS = 10;
-		const int MAX_ENEMY_COUNT = 2;
+		const int MAX_ENEMY_COUNT = 4;
 		const int MAX_BANANAS_COUNT = 3;
 		const int MAX_LIVES = 3;
 
+		int mPreviousMonkeyTime = 0;
 		int mScore = 0;
 		const int _EnemyDestroyScore = 10;
 		const float _BananaSpeed = 0.5f;
 		const float _EnemySpeed = 0.3f;
+
+		float AccelerometerValue = 0;
 
 
 		int mCurrentLives;
@@ -94,7 +97,7 @@ namespace GoneBananas
             AddChild (ballsBatch, 1, 1);
 
 			var spriteSheet = new CCSpriteSheet ("animations/monkey.plist");
-			enemyBatch = new CCSpriteBatchNode ( "balls", 10);
+			enemyBatch = new CCSpriteBatchNode ( "Enemy", 10);
 			enemyTexture = enemyBatch.Texture;
 			AddChild (enemyBatch , 2, 2);
 
@@ -110,10 +113,18 @@ namespace GoneBananas
             AddSun ();
             AddMonkey ();
 
+
+
             StartScheduling();
+
+			GoneBananasShared.Accelerometer.AddListener (AccelerometerValueChanaged);
 
             CCSimpleAudioEngine.SharedEngine.PlayBackgroundMusic ("Sounds/backgroundMusic", true);
         }
+		~GameLayer()
+		{
+			GoneBananasShared.Accelerometer.RemoveListener (AccelerometerValueChanaged);
+		}
 
         void StartScheduling()
         {
@@ -191,6 +202,12 @@ namespace GoneBananas
             AddChild (grass);
         }
 
+		public int AccelerometerValueChanaged(Android.Hardware.SensorEvent e)
+		{
+			AccelerometerValue = e.Values [1];
+			return 0;
+		}
+
         void AddSun ()
         {
             circleNode = new CCDrawNode ();
@@ -214,6 +231,11 @@ namespace GoneBananas
             monkey.Scale = 0.25f;
 
             AddChild (monkey);
+
+			Schedule (t => {
+				//visibleBananas.Add (AddBanana ());
+				UpdateMonkeyMovements (t);
+				});
         }
 
         CCSprite ShootBanana ()
@@ -358,7 +380,7 @@ namespace GoneBananas
             // Stop scheduled events as we transition to game over scene
             UnscheduleAll();
 
-            var gameOverScene = GameOverLayer.SceneWithScore (Window, hitBananas.Count);
+			var gameOverScene = GameOverLayer.SceneWithScore (Window, mScore);
             var transitionToGameOver = new CCTransitionMoveInR (0.3f, gameOverScene);
 
             Director.ReplaceScene (transitionToGameOver);
@@ -377,9 +399,34 @@ namespace GoneBananas
             return elapsedTime > GAME_DURATION;
         }
 
+		void UpdateMonkeyMovements ( float dt )
+		{
+			if (Math.Abs (AccelerometerValue) > 0.5f) {
+				CCPoint pos = monkey.Position;
+				pos += new CCPoint (MONKEY_SPEED * AccelerometerValue * dt, 0);
+
+				if (pos.X > VisibleBoundsWorldspace.Size.Width)
+					pos.X = VisibleBoundsWorldspace.Size.Width;
+				else if (pos.X < 0)
+					pos.X = 0;
+
+				monkey.Position = pos;
+			}
+			else
+				AccelerometerValue = 0;
+
+			if (Math.Abs (AccelerometerValue) < 0.5f)
+				monkey.StopAllActions ();
+			else 
+			{
+				if ( monkey.NumberOfRunningActions < 1 )
+					monkey.RunAction (walkRepeat);
+			}
+		}
+
         void OnTouchesEnded (List<CCTouch> touches, CCEvent touchEvent)
         {
-            monkey.StopAllActions ();
+            /*monkey.StopAllActions ();
 
             var location = touches [0].LocationOnScreen;
             location = WorldToScreenspace (location);  //Layer.WorldToScreenspace(location); 
@@ -391,7 +438,7 @@ namespace GoneBananas
 
             //BUG: calling walkRepeat separately as it doesn't run when called in RunActions or CCSpawn
             monkey.RunAction (walkRepeat);
-            monkey.RunActions (moveMonkey, walkAnimStop);
+            monkey.RunActions (moveMonkey, walkAnimStop);*/
 
             // move the clouds relative to the monkey's movement
             //MoveClouds (location.Y - monkey.Position.Y);
@@ -407,7 +454,7 @@ namespace GoneBananas
             Scene.SceneResolutionPolicy = CCSceneResolutionPolicy.NoBorder;
 
             grass.Position = VisibleBoundsWorldspace.Center;
-            monkey.Position = VisibleBoundsWorldspace.Center;
+			monkey.Position = VisibleBoundsWorldspace.Center - new CCPoint ( 0, VisibleBoundsWorldspace.Size.Height/4 );
 
             var b = VisibleBoundsWorldspace;
 			sun.Position = new CCPoint (72,	VisibleBoundsWorldspace.Size.Height - 72);
@@ -500,7 +547,8 @@ namespace GoneBananas
 				float idx = (CCRandom.Float_0_1 () > .5 ? 0 : 1);
 				float idxOp = 1 - idx;
 				float idy = (float) (0.7 + (CCRandom.Float_0_1 () *  0.2));
-				var enemySprite = new CCEnemySprite (enemyBatch.Texture, new CCRect (0,0, enemyBatch.Texture.PixelsWide, enemyBatch.Texture.PixelsHigh ), 5.0f, ShootBullet );
+				CCEnemySprite enemySprite = new CCEnemySprite (enemyBatch.Texture, new CCRect (0,0, enemyBatch.Texture.PixelsWide, enemyBatch.Texture.PixelsHigh ), 5.0f, ShootBullet );
+				enemySprite.Scale = 0.3f;
 				enemyBatch.AddChild (enemySprite);
 
 				enemySprite.Position = new CCPoint ( idx * VisibleBoundsWorldspace.Size.Width, idy * VisibleBoundsWorldspace.Size.Height );
