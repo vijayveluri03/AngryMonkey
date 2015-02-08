@@ -94,5 +94,6 @@
     <AndroidAsset Include="Assets\Content\hd\grass.png" />
     <AndroidAsset Include="Assets\Content\hd\balls.png" />
     <AndroidAsset Include="Assets\Content\Sounds\backgroundMusic.mp3" />
+    <AndroidAsset Include="Assets\Content\hd\Life.png" />
   </ItemGroup>
 </Project>

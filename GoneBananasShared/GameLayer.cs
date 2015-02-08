@@ -17,8 +17,17 @@ namespace GoneBananas
         const float MONKEY_SPEED = 350.0f;
         const float GAME_DURATION = 600.0f; // game ends after 60 seconds or when the monkey hits a ball, whichever comes first
         const int MAX_NUM_BALLS = 10;
-		const int MAX_ENEMY_COUNT = 1;
+		const int MAX_ENEMY_COUNT = 2;
 		const int MAX_BANANAS_COUNT = 3;
+		const int MAX_LIVES = 3;
+
+		int mScore = 0;
+		const int _EnemyDestroyScore = 10;
+		const float _BananaSpeed = 0.5f;
+		const float _EnemySpeed = 0.3f;
+
+
+		int mCurrentLives;
 
         // point to meter ratio for physics
         const int PTM_RATIO = 32;
@@ -27,6 +36,8 @@ namespace GoneBananas
         CCSprite monkey;
         List<CCSprite> visibleBananas;
         List<CCSprite> hitBananas;
+
+		CCLabelTtf mScoreLabel = null;
 
         // monkey walking animation
         CCAnimation walkAnim;
@@ -63,6 +74,8 @@ namespace GoneBananas
 		CCTexture2D enemyTexture;
 		CCSpriteFrame bananasTexture;
 
+		List<CCSprite> mAniLives = new List<CCSprite>();
+
         public GameLayer ()
         {
             var touchListener = new CCEventListenerTouchAllAtOnce ();
@@ -88,6 +101,10 @@ namespace GoneBananas
 			bananaBatch = new CCSpriteBatchNode ("animations/monkey", 10);
 			bananasTexture = spriteSheet.Frames.Find ((x) => x.TextureFilename.StartsWith ("Banana"));
 			AddChild (bananaBatch, 1, 3);
+
+			mCurrentLives = MAX_LIVES;
+
+
 
             AddGrass ();
             AddSun ();
@@ -127,9 +144,50 @@ namespace GoneBananas
             });
         }
 
+		void UpdateLives ( )
+		{
+			for (int iLivesCount = 0; iLivesCount < MAX_LIVES; iLivesCount++) 
+			{
+				mAniLives [iLivesCount].Visible = iLivesCount < mCurrentLives;
+			}
+		}
+		bool IsPlayerAlive ()
+		{
+			return mCurrentLives > 0;
+		}
+		void PlayerLostLife ()
+		{
+			mCurrentLives--;
+			if (mCurrentLives < 0)
+				mCurrentLives = 0;
+
+			UpdateLives ();
+		}
+		void UpdateScore ( int score )
+		{
+			mScore += score;
+
+			if (mScoreLabel == null) 
+			{
+				mScoreLabel = new CCLabelTtf ("Score : " + mScore , "arial", 22) {
+					Position = VisibleBoundsWorldspace.Center,
+					Color = CCColor3B.Blue,
+					HorizontalAlignment = CCTextAlignment.Center,
+					VerticalAlignment = CCVerticalTextAlignment.Center,
+					AnchorPoint = CCPoint.AnchorMiddle
+				};
+
+				AddChild (mScoreLabel, 4);
+			}
+
+			mScoreLabel.Text = "Score : " + mScore;
+			mScoreLabel.Position = new CCPoint (VisibleBoundsWorldspace.Size.Width / 2, VisibleBoundsWorldspace.Size.Height - 72);
+
+		}
         void AddGrass ()
         {
             grass = new CCSprite ("grass");
+			grass.ScaleX = 3;
             AddChild (grass);
         }
 
@@ -169,7 +227,7 @@ namespace GoneBananas
 				banana.Scale = 0.5f;
 				bananaBatch.AddChild (banana, 1);
 
-				var moveBanana = new CCMoveTo (5.0f, new CCPoint (banana.Position.X,
+				var moveBanana = new CCMoveTo (1/_BananaSpeed, new CCPoint (banana.Position.X,
 					                 VisibleBoundsWorldspace.Size.Height + banana.ContentSize.Height / 2));
 				banana.RunActions (moveBanana, moveBananaComplete);
 				banana.RepeatForever (rotateBanana);
@@ -252,6 +310,9 @@ namespace GoneBananas
 								Explode (banana.Position);
 								banana.RemoveFromParent ();
 								enemy.RemoveFromParent ();
+
+								UpdateScore (_EnemyDestroyScore);
+
 								break;
 							}
 						}
@@ -266,11 +327,30 @@ namespace GoneBananas
                 visibleBananas.Remove(banana);
             }
 
-            int ballHitCount = ballsBatch.Children.Count (ball => ball.BoundingBoxTransformedToParent.IntersectsRect (monkey.BoundingBoxTransformedToParent));
+			for ( int iBallCount = 0; iBallCount < ballsBatch.ChildrenCount; iBallCount++ )
+			{
+				if (ballsBatch.Children [iBallCount] is CCSprite) 
+				{
+					CCSprite ball = (CCSprite)ballsBatch.Children [iBallCount];
 
-            if (ballHitCount > 0) {
-                EndGame ();
-            }
+					if (monkey is CCSprite) {
+						CCSprite enemy = monkey;
+						hit = ball.BoundingBoxTransformedToParent.IntersectsRect (enemy.BoundingBoxTransformedToParent);
+						if (hit) 
+						{
+							CCSimpleAudioEngine.SharedEngine.PlayEffect ("Sounds/tap");
+							Explode (ball.Position);
+							ball.RemoveFromParent ();
+
+							PlayerLostLife ();
+							if ( !IsPlayerAlive() )
+								EndGame ();
+
+							break;
+						}
+					}
+				}
+			}
         }
 
         void EndGame ()
@@ -314,7 +394,7 @@ namespace GoneBananas
             monkey.RunActions (moveMonkey, walkAnimStop);
 
             // move the clouds relative to the monkey's movement
-            MoveClouds (location.Y - monkey.Position.Y);
+            //MoveClouds (location.Y - monkey.Position.Y);
 
 
 			visibleBananas.Add (ShootBanana ());
@@ -330,11 +410,27 @@ namespace GoneBananas
             monkey.Position = VisibleBoundsWorldspace.Center;
 
             var b = VisibleBoundsWorldspace;
-            sun.Position = b.UpperRight.Offset (-100, -100); //BUG: doesn't appear in visible area on Nexus 7 device
+			sun.Position = new CCPoint (72,	VisibleBoundsWorldspace.Size.Height - 72);
 
             circleNode.Position = sun.Position;
 
-            AddClouds ();
+            //AddClouds ();
+			UpdateScore (0);
+
+			for (int iLivesCount = 0; iLivesCount < MAX_LIVES; iLivesCount++) 
+			{
+				CCSprite lifeSprite = new CCSprite ("Life.png");
+				lifeSprite.Scale = 0.036f;
+				lifeSprite.Visible = false;
+				AddChild (lifeSprite, 3);
+
+				lifeSprite.Position =  new CCPoint (VisibleBoundsWorldspace.Size.Width - ((iLivesCount +1) * 72),
+					VisibleBoundsWorldspace.Size.Height - 72);
+
+				mAniLives.Add (lifeSprite);
+			}
+
+			UpdateLives ();
         }
 
         void InitPhysics ()
@@ -411,7 +507,7 @@ namespace GoneBananas
 				//enemySprite.ZOrder  =
 
 				// sending the enemy to the opposite direction
-				var moveEnemy = new CCMoveTo (5.0f, new CCPoint (idxOp * VisibleBoundsWorldspace.Size.Width,
+				var moveEnemy = new CCMoveTo (1/_EnemySpeed, new CCPoint (idxOp * VisibleBoundsWorldspace.Size.Width,
 												enemySprite.Position.Y));
 				enemySprite.RunActions (moveEnemy, moveBananaComplete);
 				//enemySprite.RepeatForever (rotateBanana);
