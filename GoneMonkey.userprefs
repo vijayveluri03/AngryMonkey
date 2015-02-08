@@ -1,0 +1,17 @@
+﻿<Properties StartupItem="GoneBananasAndroid/GoneMonkeyAndroid.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Ad-Hoc|iPhone" PreferredExecutionTarget="Android.d20ff610" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="GoneBananasiOS/AppDelegate.cs">
+    <Files>
+      <File FileName="GoneBananasShared/GameLayer.cs" Line="1" Column="1" />
+      <File FileName="GoneBananasAndroid/Accelerometer_Droid.cs" Line="1" Column="1" />
+      <File FileName="GoneBananasShared/Accelerometer.cs" Line="1" Column="1" />
+      <File FileName="GoneBananasAndroid/MainActivity.cs" Line="1" Column="1" />
+      <File FileName="GoneBananasAndroid/packages.config" Line="1" Column="1" />
+      <File FileName="GoneBananasiOS/AppDelegate.cs" Line="10" Column="10" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

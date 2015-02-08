@@ -15,7 +15,7 @@ using Android.Hardware;
 namespace GoneBananasAndroid
 {
     [Activity(
-        Label = "GoneBananas",
+        Label = "GoneMonkey",
         AlwaysRetainTaskState = true,
         Icon = "@drawable/ic_launcher",
         Theme = "@android:style/Theme.NoTitleBar",

@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0" package="GoneBananasAndroid.GoneBananasAndroid">
+  <uses-sdk android:minSdkVersion="17" />
+  <application android:label="GoneBananasAndroid" android:name="mono.android.app.Application">
+    <activity android:alwaysRetainTaskState="true" android:configChanges="keyboard|keyboardHidden" android:icon="@drawable/ic_launcher" android:label="GoneMonkey" android:launchMode="singleInstance" android:screenOrientation="landscape" android:theme="@android:style/Theme.NoTitleBar" android:name="gonebananasandroid.MainActivity" />
+    <provider android:name="mono.MonoRuntimeProvider" android:exported="false" android:initOrder="2147483647" android:authorities="GoneBananasAndroid.GoneBananasAndroid.mono.MonoRuntimeProvider.__mono_init__" />
+    <activity android:alwaysRetainTaskState="true" android:configChanges="keyboard|keyboardHidden" android:icon="@drawable/ic_launcher" android:label="GoneMonkey" android:launchMode="singleInstance" android:screenOrientation="landscape" android:theme="@style/Mono.Android.Theme.Splash" android:name="gonebananasandroid.gonebananasandroid.TrialSplashScreen" android:noHistory="true">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
+  </application>
+</manifest>
