@@ -19,12 +19,12 @@ namespace GoneBananasAndroid
 
 		public void OnSensorChanged (SensorEvent e)
 		{
-			var text = new StringBuilder("x = ")
-				.Append(e.Values[0])
-				.Append(", y=")
-				.Append(e.Values[1])
-				.Append(", z=")
-				.Append(e.Values[2]);
+//			var text = new StringBuilder("x = ")
+//				.Append(e.Values[0])
+//				.Append(", y=")
+//				.Append(e.Values[1])
+//				.Append(", z=")
+//				.Append(e.Values[2]);
 
 			//Console.WriteLine (text);
 			Accelerometer.pInstance.OnAccelChange (e);

@@ -29,7 +29,7 @@ namespace GoneBananasShared
 
 		public void OnAccelChange(SensorEvent e)
 		{
-			Console.WriteLine ("accel changed");
+//			Console.WriteLine ("accel changed");
 			if (mValueChangedListener != null)
 				mValueChangedListener (e);
 		}
