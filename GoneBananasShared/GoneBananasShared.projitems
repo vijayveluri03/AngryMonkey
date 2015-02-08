@@ -14,5 +14,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)GameOverLayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GoneBananasApplicationDelegate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CCPhysicsSprite.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CCEnemySprite.cs" />
   </ItemGroup>
 </Project>
