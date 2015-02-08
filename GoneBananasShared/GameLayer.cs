@@ -253,6 +253,7 @@ namespace GoneBananas
 					                 VisibleBoundsWorldspace.Size.Height + banana.ContentSize.Height / 2));
 				banana.RunActions (moveBanana, moveBananaComplete);
 				banana.RepeatForever (rotateBanana);
+				CCSimpleAudioEngine.SharedEngine.PlayEffect ("Sounds/EnemyShoot.wav");
 
 				return banana;
 			}
@@ -328,7 +329,6 @@ namespace GoneBananas
 							if (hit) 
 							{
 								hitBananas.Add (banana);
-								CCSimpleAudioEngine.SharedEngine.PlayEffect ("Sounds/EnemyShoot.wav");
 								Explode (banana.Position);
 								banana.RemoveFromParent ();
 								enemy.RemoveFromParent ();
